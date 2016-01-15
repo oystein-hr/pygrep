@@ -23,9 +23,11 @@ def main(extension, search):
         print('[{}]{} : {}'.format(index, item['file'], item['result']))
 
     while True:
-        choice = input('Choose file to be opened (number): ')
+        choice = input('Choose file to be opened (number, "n" to cancel): ')
         if choice.isdigit():
             choice = int(choice)
+        elif choice == 'n':
+            sys.exit()
         else:
             continue
         if choice <= len(results) - 1:
@@ -45,6 +47,6 @@ if __name__ == '__main__':
     if len(sys.argv) > 2:
         sys.exit(main(sys.argv[1], sys.argv[2]))
     else:
-        print('Missing arguments. Need extension and search string.')
-        print("Example: pygrep .py 'This is a search string'")
+        print('Usage:')
+        print("  pygrep .py 'This is a search string'")
     sys.exit()
