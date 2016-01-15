@@ -1,12 +1,14 @@
+#!/usr/bin/env python
 import sys
 import os
-from pprint import pprint
+from subprocess import call
 
 
 def main(extension, search):
+    print(search)
     cwd = os.getcwd()
     results = []
-    exclude=['PyKivy']
+    exclude = ['PyKivy']
     for root, dirs, files in os.walk(cwd, topdown=True):
         dirs[:] = [d for d in dirs if d not in exclude]
         files[:] = [f for f in files if f.endswith(extension)]
@@ -20,6 +22,18 @@ def main(extension, search):
     for index, item in enumerate(results):
         print('[{}]{} : {}'.format(index, item['file'], item['result']))
 
+    while True:
+        choice = input('Choose file to be opened (number): ')
+        if choice.isdigit():
+            choice = int(choice)
+        else:
+            continue
+        if choice <= len(results) - 1:
+            break
+
+    print('Opening [{}]: {}'.format(choice, results[choice]['file']))
+    call(["/usr/local/bin/charm", results[choice]['file']])
+
 
 def search_file(filename, search):
     with open(filename, 'r') as file:
@@ -28,7 +42,7 @@ def search_file(filename, search):
                 return {'file': filename, 'result': contents.strip()}
 
 if __name__ == '__main__':
-    if len(sys.argv) > 1:
+    if len(sys.argv) > 2:
         sys.exit(main(sys.argv[1], sys.argv[2]))
     else:
         print('Missing arguments. Need extension and search string.')
